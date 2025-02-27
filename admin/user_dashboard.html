@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MobiCharge - User Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF-AutoTable plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+        }
+        .card {
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 20px;
+            height: calc(100vh - 40px); /* Full height minus padding */
+            overflow-y: auto; /* Enable scrolling if content overflows */
+        }
+        .nav-link {
+            color: #333;
+            padding: 8px 16px;
+            margin-bottom: 5px;
+            border-radius: 4px;
+        }
+        .nav-link:hover {
+            background-color: #f0f0f0;
+        }
+        .nav-link.active {
+            background-color: #3949ab;
+            color: white;
+        }
+        .progress {
+            height: 10px;
+        }
+        .download-btn {
+            margin-left: 10px;
+        }
+        .content-section {
+            display: none; /* Initially hidden */
+        }
+        .content-section.active {
+            display: block;
+        }
+        .category-info {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            display: none; /* Initially hidden */
+        }
+        .sidebar-category {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+        .sidebar-footer {
+            margin-top: 30px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .btn-primary, .bg-primary, .btn-primary:hover, .btn-primary:focus {
+            background-color: #3949ab !important;
+            border-color: #3949ab !important;
+        }
+        .text-primary {
+            color: #3949ab !important;
+        }
+        .border-primary {
+            border-color: #3949ab !important;
+        }
+        .bg-success {
+            background-color: #3949ab !important;
+        }
+        .text-success {
+            color: #3949ab !important;
+        }
+        .navbar-dark.bg-primary {
+            background-color: #3949ab !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">MobiCharge</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Recharge</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Plans</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Support</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Karthik Rajan
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#">My Profile</a></li>
+                            <li><a class="dropdown-item" href="#">Settings</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Logout</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div class="sidebar">
+                    <div class="text-center mb-4">
+                        <img src="/api/placeholder/80/80" class="rounded-circle mb-2" alt="Profile Picture">
+                        <h5>Karthik Rajan</h5>
+                        <p class="text-muted mb-0">+91 9876543210</p>
+                    </div>
+                    <hr>
+                    <div class="nav flex-column">
+                        <div class="sidebar-category">
+                            <a class="nav-link active menu-link" href="#" data-target="dashboard-section">
+                                <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-category">
+                            <a class="nav-link menu-link" href="#" data-target="plans-section">
+                                <i class="fas fa-mobile-alt me-2"></i> My Plans
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-category">
+                            <a class="nav-link menu-link" href="#" data-target="transactions-section">
+                                <i class="fas fa-history me-2"></i> Recharge History
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-category">
+                            <a class="nav-link menu-link" href="#" data-target="offers-section">
+                                <i class="fas fa-gift me-2"></i> Offers
+                                <span class="badge bg-danger rounded-pill ms-2">2 New</span>
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-category">
+                            <a class="nav-link menu-link" href="#" data-target="settings-section">
+                                <i class="fas fa-cog me-2"></i> Account Settings
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-category">
+                            <a class="nav-link menu-link" href="#" data-target="support-section">
+                                <i class="fas fa-question-circle me-2"></i> Help & Support
+                            </a>
+                        </div>
+                        
+                        <div class="sidebar-footer">
+                            <a class="nav-link text-danger" href="#">
+                                <i class="fas fa-sign-out-alt me-2"></i> Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9">
+                <!-- Dashboard Section -->
+                <div id="dashboard-section" class="content-section active">
+                    <!-- Welcome Banner -->
+                    <div class="card mb-4">
+                        <div class="card-body bg-light">
+                            <h4>Welcome back, Karthik!</h4>
+                            <p class="mb-0">Your current plan expires in 15 days. Check out our latest offers below.</p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Row -->
+                    <div class="row mb-4">
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-bolt text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Quick Recharge</h5>
+                                    <a href="#" class="btn btn-primary mt-2">Recharge Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-gift text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Special Offers</h5>
+                                    <a href="#" class="btn btn-primary mt-2 offers-link">View Offers</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <i class="fas fa-headset text-primary mb-3" style="font-size: 2rem;"></i>
+                                    <h5>Support</h5>
+                                    <a href="#" class="btn btn-primary mt-2 support-link">Get Help</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Data Usage Summary -->
+                    <div class="card mb-4">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Usage Summary</h5>
+                            <a href="#" class="btn btn-sm btn-outline-primary plans-link">View Full Plan Details</a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h6>Data Usage</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>15.2 GB used of 2 GB/day</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <h6>Voice Usage</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>42 mins used today</span>
+                                        <span>Unlimited</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Transactions Summary -->
+                    <div class="card">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Recent Transactions</h5>
+                            <a href="#" class="btn btn-sm btn-outline-primary transactions-link">View All Transactions</a>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Feb 15, 2025</td>
+                                            <td>Monthly Recharge</td>
+                                            <td>₹2,499</td>
+                                            <td><span class="badge bg-success">Success</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plans Section -->
+                <div id="plans-section" class="content-section">
+                    <div class="card mb-4">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Current Plan Usage</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h6>Data Usage</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>15.2 GB used of 2 GB/day</span>
+                                        <span>65%</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 65%"></div>
+                                    </div>
+                                    <p class="text-muted small">Daily reset at midnight. Plan valid till 15 Mar 2025</p>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <h6>Voice Usage</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>42 mins used today</span>
+                                        <span>Unlimited</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"></div>
+                                    </div>
+                                    <p class="text-muted small">Unlimited voice calls to all networks</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h6>SMS Usage</h6>
+                                    <div class="d-flex justify-content-between mb-1">
+                                        <span>12 SMS used of 100</span>
+                                        <span>12%</span>
+                                    </div>
+                                    <div class="progress mb-3">
+                                        <div class="progress-bar bg-primary" role="progressbar" style="width: 12%"></div>
+                                    </div>
+                                    <p class="text-muted small">Daily limit of 100 SMS</p>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card bg-light border-0">
+                                        <div class="card-body">
+                                            <h6>Current Plan Details</h6>
+                                            <div class="mb-2">
+                                                <strong>Plan:</strong> Super Value Pack
+                                            </div>
+                                            <div class="mb-2">
+                                                <strong>Price:</strong> ₹2,499
+                                            </div>
+                                            <div>
+                                                <strong>Validity:</strong> 28 days (Expires on 15 Mar 2025)
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Recommended Plans For You</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 border-primary">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title">Value Pack</h5>
+                                                <span class="badge bg-primary">Most Popular</span>
+                                            </div>
+                                            <h6 class="text-primary mb-3">₹3,499</h6>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-primary me-2"></i> 2.5 GB data per day</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> Unlimited calls</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> 100 SMS per day</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> 1 month subscription to StreamFlix</li>
+                                            </ul>
+                                            <p class="text-muted small">Validity: 28 days</p>
+                                            <button class="btn btn-outline-primary w-100">Select Plan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between">
+                                                <h5 class="card-title">Annual Pack</h5>
+                                                <span class="badge bg-primary">Best Value</span>
+                                            </div>
+                                            <h6 class="text-primary mb-3">₹29,999</h6>
+                                            <ul class="list-unstyled">
+                                                <li><i class="fas fa-check text-primary me-2"></i> 3 GB data per day</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> Unlimited calls</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> 100 SMS per day</li>
+                                                <li><i class="fas fa-check text-primary me-2"></i> Annual subscription to 2 OTT platforms</li>
+                                            </ul>
+                                            <p class="text-muted small">Validity: 365 days</p>
+                                            <button class="btn btn-outline-primary w-100">Select Plan</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Section -->
+                <div id="transactions-section" class="content-section">
+                    <div class="card">
+                        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Recharge History</h5>
+                            <div>
+                                <button id="downloadAllTransactions" class="btn btn-sm btn-outline-primary me-2" title="Download All Transactions">
+                                    <i class="fas fa-file-pdf me-1"></i> Download All
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table mb-0" id="transactionsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Transaction ID</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Feb 15, 2025</td>
+                                            <td>#TXN45678</td>
+                                            <td>Monthly Recharge</td>
+                                            <td>₹2,499</td>
+                                            <td><span class="badge bg-success">Success</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary download-single-transaction" 
+                                                        data-date="Feb 15, 2025" 
+                                                        data-txn="#TXN45678" 
+                                                        data-desc="Monthly Recharge" 
+                                                        data-amount="₹2,499" 
+                                                        data-status="Success">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 16, 2025</td>
+                                            <td>#TXN45123</td>
+                                            <td>Data Add-on Pack</td>
+                                            <td>₹799</td>
+                                            <td><span class="badge bg-success">Success</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary download-single-transaction"
+                                                        data-date="Jan 16, 2025" 
+                                                        data-txn="#TXN45123" 
+                                                        data-desc="Data Add-on Pack" 
+                                                        data-amount="₹799" 
+                                                        data-status="Success">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Jan 15, 2025</td>
+                                            <td>#TXN44789</td>
+                                            <td>Monthly Recharge</td>
+                                            <td>₹2,499</td>
+                                            <td><span class="badge bg-success">Success</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-outline-primary download-single-transaction"
+                                                        data-date="Jan 15, 2025" 
+                                                        data-txn="#TXN44789" 
+                                                        data-desc="Monthly Recharge" 
+                                                        data-amount="₹2,499" 
+                                                        data-status="Success">
+                                                    <i class="fas fa-download"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Offers Section -->
+                <div id="offers-section" class="content-section">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Special Offers For You</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100 border-primary">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <h5 class="card-title">50% Off Annual Plan</h5>
+                                                <span class="badge bg-danger">New</span>
+                                            </div>
+                                            <p>Get 50% off on our annual plan when you upgrade from your current plan.</p>
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div>
+                                                    <span class="text-decoration-line-through me-2">₹29,999</span>
+                                                    <span class="text-primary fw-bold">₹14,999</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-primary">Get Now</button>
+                                            </div>
+                                            <p class="text-muted small mt-2">Valid until: March 31, 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <div class="card h-100">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <h5 class="card-title">Free StreamFlix Subscription</h5>
+                                                <span class="badge bg-danger">New</span>
+                                            </div>
+                                            <p>Get 3 months of StreamFlix subscription for free when you recharge with our Value Pack.</p>
+                                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                                <div>
+                                                    <span class="text-primary fw-bold">Worth ₹1,499</span>
+                                                </div>
+                                                <button class="btn btn-sm btn-primary">Get Now</button>
+                                            </div>
+                                            <p class="text-muted small mt-2">Valid until: March 15, 2025</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings Section -->
+                <div id="settings-section" class="content-section">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Account Settings</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row mb-4">
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Personal Information</h6>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label">Full Name</label>
+                                            <input type="text" class="form-control" value="Karthik Rajan">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Email Address</label>
+                                            <input type="email" class="form-control" value="karthik.rajan@example.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mobile Number</label>
+                                            <input type="tel" class="form-control" value="+91 9876543210" readonly>
+                                            <small class="text-muted">Primary number cannot be changed</small>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                                    </form>
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="mb-3">Notification Settings</h6>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="lowBalanceAlert" checked>
+                                            <label class="form-check-label" for="lowBalanceAlert">Low Balance Alerts</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="dataUsageAlert" checked>
+                                            <label class="form-check-label" for="dataUsageAlert">Data Usage Alerts</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="newOffersAlert" checked>
+                                            <label class="form-check-label" for="newOffersAlert">New Offers & Promotions</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="transactionAlert" checked>
+                                            <label class="form-check-label" for="transactionAlert">Transaction Alerts</label>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary">Save Preferences</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Support Section -->
+                <div id="support-section" class="content-section">
+                    <div class="card">
+                        <div class="card-header bg-white">
+                            <h5 class="mb-0">Help & Support</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6 mb-4">
+                                    <h6>Contact Us</h6>
+                                    <p>Need immediate assistance? Reach out to us through any of these channels:</p>
+                                    <ul class="list-unstyled">
+                                        <li class="mb-2">
+                                            <i class="fas fa-phone-alt text-primary me-2"></i> 
+                                            <strong>Call:</strong> 1-800-MOBICHARGE (24/7 Support)
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-envelope text-primary me-2"></i> 
+                                            <strong>Email:</strong> support@mobicharge.com
+                                        </li>
+                                        <li class="mb-2">
+                                            <i class="fas fa-comment-dots text-primary me-2"></i> 
+                                            <strong>Live Chat:</strong> Available 9 AM - 9 PM
+                                        </li>
+                                    </ul>
+                                    <button class="btn btn-primary mt-2">
+                                        <i class="fas fa-comments me-2"></i> Start Live Chat
+                                    </button>
+                                </div>
+                                <div class="col-md-6 mb-4">
+                                    <h6>FAQs</h6>
+                                    <p>Find quick answers to common questions:</p>
+                                    <div class="accordion" id="faqAccordion">
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="faqHeading1">
+                                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse1">
+                                                    How do I recharge my account?
+                                                </button>
+                                            </h2>
+                                            <div id="faqCollapse1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body">
+                                                    You can recharge your account by visiting the "Recharge" section in your dashboard or by using the MobiCharge mobile app.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="faqHeading2">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse2">
+                                                    How can I check my data usage?
+                                                </button>
+                                            </h2>
+                                            <div id="faqCollapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body">
+                                                    You can check your data usage in the "Usage Summary" section of your dashboard.
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="accordion-item">
+                                            <h2 class="accordion-header" id="faqHeading3">
+                                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqCollapse3">
+                                                    What should I do if my recharge fails?
+                                                </button>
+                                            </h2>
+                                            <div id="faqCollapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                                                <div class="accordion-body">
+                                                    If your recharge fails, please check your payment method and try again. If the issue persists, contact our support team.
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // JavaScript for handling menu navigation
+        document.querySelectorAll('.menu-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = this.getAttribute('data-target');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.querySelector(`#${target}`).classList.add('active');
+                document.querySelectorAll('.nav-link').forEach(navLink => {
+                    navLink.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // JavaScript for handling PDF downloads
+        document.getElementById('downloadAllTransactions').addEventListener('click', function() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.autoTable({ html: '#transactionsTable' });
+            doc.save('all_transactions.pdf');
+        });
+
+        document.querySelectorAll('.download-single-transaction').forEach(button => {
+            button.addEventListener('click', function() {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+                const date = this.getAttribute('data-date');
+                const txn = this.getAttribute('data-txn');
+                const desc = this.getAttribute('data-desc');
+                const amount = this.getAttribute('data-amount');
+                const status = this.getAttribute('data-status');
+                doc.text(`Transaction Details\n\nDate: ${date}\nTransaction ID: ${txn}\nDescription: ${desc}\nAmount: ${amount}\nStatus: ${status}`, 10, 10);
+                doc.save(`transaction_${txn}.pdf`);
+            });
+        });
+    </script>
+</body>
+</html>
