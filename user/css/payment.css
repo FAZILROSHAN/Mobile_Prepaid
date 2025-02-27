@@ -1,0 +1,450 @@
+/* General Page Styling */
+body {
+    font-family: 'Inter', -apple-system, sans-serif;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #f0f4f8, #e2e8f0);
+}
+
+/* Container Layout */
+.container {
+    display: flex;
+    width: 80%;
+    height: 80vh;
+    gap: 24px;
+    margin-top: 5%;
+}
+
+/* Left Section - Payment Options */
+.payment-options {
+    width: 40%;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Back Button */
+.back-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    margin-bottom: 16px;
+    color: #475569;
+    transition: color 0.2s ease;
+}
+
+.back-btn:hover {
+    color: #1e293b;
+}
+
+/* Payment Options Buttons */
+.payment-btn {
+    width: 100%;
+    padding: 16px;
+    margin: 12px 0;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.payment-btn:hover {
+    background-color: #f1f5f9;
+    border-color: #cbd5e1;
+    transform: translateY(-1px);
+}
+
+/* Right Section - Payment Details */
+.payment-details {
+    width: 60%;
+    padding: 24px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Dynamic Content Section */
+#dynamic-content {
+    background-color: #f8fafc;
+    padding: 24px;
+    border-radius: 8px;
+    height: 60%;
+    margin-bottom: 24px;
+    border: 1px solid #e2e8f0;
+}
+
+/* Payment Form Styling */
+.payment-form {
+    background: #ffffff;
+    padding: 24px;
+    border-radius: 8px;
+    margin-top: 16px;
+    border: 1px solid #e2e8f0;
+}
+
+.payment-form label {
+    display: block;
+    margin: 12px 0 6px;
+    font-weight: 500;
+    color: #475569;
+}
+
+.payment-form input,
+.payment-form select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    transition: all 0.2s ease;
+}
+
+.payment-form input:focus,
+.payment-form select:focus {
+    outline: none;
+    border-color: #64748b;
+    background-color: #ffffff;
+}
+
+/* Success Modal */
+.success-modal {
+    background: rgba(0, 0, 0, 0.4);
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 400px;
+}
+
+.modal-content button {
+    background: #0ea5e9;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    margin-top: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.modal-content button:hover {
+    background: #0284c7;
+}
+
+/* Action Buttons */
+.actions {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.change-plan,
+.recharge {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+/* Change Plan Button */
+.change-plan {
+    background-color: #f1f5f9;
+    color: #475569;
+}
+
+.change-plan:hover {
+    background-color: #e2e8f0;
+}
+
+/* Recharge Button */
+.recharge {
+    background-color: #0ea5e9;
+    color: white;
+}
+
+.recharge:hover {
+    background-color: #0284c7;
+}
+
+/* Form Validation Styles */
+input:invalid,
+select:invalid {
+    border-color: #f87171;
+    background-color: #fef2f2;
+}
+
+input:valid,
+select:valid {
+    border-color: #34d399;
+    background-color: #f0fdfa;
+}
+
+/* Card details layout */
+.card-details {
+    display: flex;
+    gap: 15px;
+}
+
+.card-details > div {
+    flex: 1;
+}
+
+/* COMPLETE MOBILE REDESIGN */
+@media (max-width: 768px) {
+    body {
+        background: #ffffff;
+        height: auto;
+        padding: 0;
+        overflow-x: hidden;
+    }
+    
+    /* Fix navbar positioning */
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        z-index: 100;
+    }
+    
+    /* Container redesign */
+    .container {
+        flex-direction: column;
+        width: 100%;
+        height: auto;
+        gap: 12px;
+        margin: 70px 0 0 0; /* Account for fixed navbar */
+        padding: 0;
+    }
+    
+    /* Payment options redesign */
+    .payment-options {
+        width: 100%;
+        padding: 16px;
+        border-radius: 0;
+        box-shadow: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    
+    /* Payment details redesign */
+    .payment-details {
+        width: 100%;
+        padding: 16px;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    
+    /* Dynamic content redesign */
+    #dynamic-content {
+        height: auto;
+        min-height: 150px;
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    /* Payment buttons redesign */
+    .payment-btn {
+        margin: 8px 0;
+        padding: 14px;
+        font-size: 15px;
+        border-radius: 6px;
+    }
+    
+    /* Action buttons redesign */
+    .actions {
+        flex-direction: column;
+        gap: 10px;
+        margin-top: 16px;
+    }
+    
+    .change-plan, .recharge {
+        width: 100%;
+        padding: 14px;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+    
+    /* Form redesign */
+    .payment-form {
+        padding: 16px;
+        margin-top: 12px;
+    }
+    
+    .payment-form label {
+        margin: 8px 0 4px;
+        font-size: 14px;
+    }
+    
+    .payment-form input,
+    .payment-form select {
+        padding: 12px;
+        font-size: 16px; /* Larger for mobile input */
+        margin-bottom: 12px;
+    }
+    
+    /* Typography adjustments */
+    h2 {
+        font-size: 18px;
+        margin: 10px 0;
+    }
+    
+    h3 {
+        font-size: 16px;
+        margin: 8px 0;
+    }
+    
+    p {
+        font-size: 14px;
+        margin: 6px 0;
+    }
+}
+
+/* Even smaller screens */
+@media (max-width: 480px) {
+    .container {
+        margin-top: 60px;
+    }
+    
+    .payment-options,
+    .payment-details {
+        padding: 12px;
+    }
+    
+    #dynamic-content {
+        padding: 12px;
+    }
+    
+    .back-btn {
+        font-size: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .payment-btn {
+        padding: 12px;
+        font-size: 14px;
+        margin: 6px 0;
+    }
+    
+    /* Card details vertical stack for small screens */
+    .card-details {
+        flex-direction: column;
+        gap: 0;
+    }
+    
+    /* Modal adjustments */
+    .modal-content {
+        padding: 16px;
+        width: 85%;
+        max-width: 280px;
+    }
+    
+    .modal-content button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Extra fixes for very small screens */
+@media (max-width: 360px) {
+    .container {
+        margin-top: 50px;
+    }
+    
+    .payment-options,
+    .payment-details {
+        padding: 10px;
+    }
+    
+    #dynamic-content {
+        padding: 10px;
+        min-height: 120px;
+    }
+    
+    .payment-btn {
+        padding: 10px;
+        font-size: 13px;
+        margin: 5px 0;
+    }
+    
+    .actions {
+        gap: 8px;
+    }
+    
+    .change-plan, .recharge {
+        padding: 10px;
+        font-size: 13px;
+    }
+    
+    .payment-form {
+        padding: 10px;
+    }
+    
+    h2 {
+        font-size: 16px;
+    }
+    
+    h3 {
+        font-size: 14px;
+    }
+    
+    p {
+        font-size: 13px;
+    }
+}
+.error-message {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    display: none;
+}
+
+.error-message:not(:empty) {
+    display: block;
+}
+
+input:invalid, select:invalid {
+    border-color: #dc3545;
+}
+
+input:focus:invalid, select:focus:invalid {
+    box-shadow: 0 0 0 0.2rem rgba(220,53,69,.25);
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    justify-content: center;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 12px;
+    font-size: 14px;
+}
