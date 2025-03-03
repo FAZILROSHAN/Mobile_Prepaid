@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recharge Preview</title>
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css">
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/recharge_preview.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <ul class="nav-links">
+            <li><a href="homepage.html" onclick="goHome()">Home</a></li>
+            <li><a href="plans.html" class="active">Plans</a></li>
+            <li><a href="recharge.html">Recharge</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li class="icon"><a href="contact.html">Contact us </a></li>
+              <li class="nav-item dropdown">
+                  <a href="" id="authLink" class="nav-link">Sign Up</a>
+                  <div class="dropdown-menu" id="userDropdown">
+                    <span id="userNumber"></span>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                    <button id="logout" style="display: none;">logout</button>
+                </div>
+              </li>
+        </ul>
+    </div>
+<br><br><br><br><br>
+    <!-- Recharge Preview Section -->
+    <div class="recharge-container">
+        <button class="back-btn" onclick="goBack()">&#8592;</button>
+        
+        <div class="header-section">
+            <h3>RECHARGE FOR +91 <span id="userPhoneNumber">xxxxxxxxxxxxx</span></h3>
+            <button class="change-btn" onclick="change()">CHANGE</button>
+        </div>
+        
+        <hr>
+        
+        <div class="change-section">
+            <p>Amount: <span id="planAmount">xxxx</span></p>
+            <button class="change-plan-btn" onclick="changePlan()">CHANGE PLAN</button>
+        </div>
+        <div class="plan-details">
+            <p>Category: <span id="category"></span></p>
+            <p>Data per Day: <span id="data/day"></span></p>
+            <p>Validity: <span id="validity"></span></p>
+        </div>
+        <a href="payment.html" class="buy-btn" onclick="proceedToPayment()">BUY NOW</a>
+    </div>
+    <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
+  
+    <!-- Details will be dynamically inserted here -->
+
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+        
+        document.addEventListener("DOMContentLoaded", function() {
+            let number = localStorage.getItem("phoneNumber");
+            let plan = localStorage.getItem("selectedPlan");
+
+            if (number && plan) {
+                // Update the phone number dynamically
+                document.getElementById("userPhoneNumber").textContent = number;
+
+                // Update plan details
+                let Data = plan.split(",")[3].split(":")[1];
+                document.getElementById("data/day").textContent=Data;
+
+                let Validity = plan.split(",")[2].split(":")[1];
+                document.getElementById("validity").textContent=Validity;
+
+                // Extract amount from the plan (if needed)
+                let amount = plan.split(",")[1].split(":")[1]; // Assumes plan format is "₹XXX - Details"
+                document.getElementById("planAmount").textContent = amount;
+                
+                let category = plan.split(",")[0].split(":")[1]; // Assumes plan format is "₹XXX - Details"
+                document.getElementById("category").textContent = category;
+            } 
+            else {
+                window.location.href = "plans.html"; // Redirect if data is missing
+            }
+        });
+
+        function changePlan() {
+            window.location.href = "plans.html"; // Redirect to plans page
+        }
+
+        function proceedToPayment() {
+            window.location.href = "payment.html"; // Redirect to payment page
+        }
+
+        function goHome() {
+            localStorage.clear();
+            window.location.href = "homepage.html"; // Clear data and go home
+        }
+    </script>
+
+<div id="phonePopup" class="popup">
+    <div class="popup-content">
+        <h3>Change Number</h3>
+        <input type="tel" id="newPhoneNumber" placeholder="Enter your phone number">
+        <p class="error" id="newPhoneError"></p>
+        <button onclick="savePhoneNumber()">Proceed to Change</button>
+        <p class="close-btn" onclick="Back()">X</p>
+    </div>
+</div>
+<script>
+    function savePhoneNumber() {
+        let number = document.getElementById("newPhoneNumber").value.trim();
+        let errorMsg = document.getElementById("newPhoneError");
+
+        if (!validatePhoneNumber(number)) {
+            errorMsg.textContent = "Enter a valid 10-digit phone number!";
+        } else {
+            errorMsg.textContent = "";
+            localStorage.setItem("phoneNumber", number);
+            window.location.href = "recharge_preview.html"; // Redirect to review page
+        }
+    }
+
+    function validatePhoneNumber(number) {
+        return /^[6-9]\d{9}$/.test(number); // Ensures 10-digit number starts with 6-9
+    }
+    
+    function Back(){
+        window.location.href="recharge_preview.html";
+    }
+
+    function change(){
+        document.getElementById("phonePopup").style.display="block";
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+    let loggedin = localStorage.getItem("loggedin") === "true";
+    let logoutBtn = document.getElementById("logoutBtn");
+    let logoutSection = document.getElementById("logout");
+
+    if (logoutBtn && logoutSection) {
+        if (loggedin) {
+            logoutSection.style.display = "block";
+            logoutBtn.style.display = "none";
+        } else {
+            logoutSection.style.display = "none";
+            logoutBtn.style.display = "block";
+        }
+    }
+});
+let logoutSection=document.getElementById("logout");
+logoutSection.addEventListener("click", () => {
+    localStorage.removeItem("loggedin");
+    window.location.reload(); // Refresh to update UI
+});
+</script>
+</body>
+</html>

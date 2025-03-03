@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/get_phone.css">
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css">
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <ul class="nav-links">
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="plans.html" >Plans</a></li>
+            <li><a href="recharge.html">Recharge</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li class="icon"><a href="contact.html">Contact us </a></li>
+              <li class="nav-item dropdown">
+                  <a href="" id="authLink"class="active">Sign Up</a>
+                  <div class="dropdown-menu" id="userDropdown">
+                    <span id="userNumber"></span>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                    <button id="logout" style="display: none;">logout</button>
+                </div>
+              </li>
+        </ul>
+    </div>
+    <div class="container">
+        <div class="login-box">
+            <h2>LOGIN</h2>
+            <div class="input-area">
+                <p>ENTER MOBILE NUMBER:</p>
+                <div class="mobile-input">
+                    <span class="country-code">+91</span>
+                    <input type="tel" id="mobileNumber" maxlength="10" class="otp-field" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^([0-5])/g, '')">
+                </div>
+                <button class="user-btn" id="sendOtpButton">SEND OTP</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="otpPopup" class="popup">
+        <div class="popup-content">
+            <span class="close-btn" onclick="closeOtpPopup()">&times;</span>
+            <div class="otp-box">
+                <h2>VERIFY OTP</h2>
+                <div class="input-area">
+                    <p>ENTER OTP:</p>
+                    <div class="otp-input-fields">
+                        <input type="text" id="otp1" maxlength="1" class="otp-field" autofocus>
+                        <input type="text" id="otp2" maxlength="1" class="otp-field">
+                        <input type="text" id="otp3" maxlength="1" class="otp-field">
+                        <input type="text" id="otp4" maxlength="1" class="otp-field">
+                        <input type="text" id="otp5" maxlength="1" class="otp-field">
+                        <input type="text" id="otp6" maxlength="1" class="otp-field">
+                    </div>
+                    <button class="verify-otp" id="verifyOtpButton">VERIFY OTP</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/Mobile_prepaid/user/Js/get_phone.js"></script>
+    <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
+</body>
+</html>

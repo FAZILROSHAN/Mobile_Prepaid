@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recharge</title>
+  <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css">
+  <link rel="stylesheet" href="/Mobile_prepaid/user/css/recharge.css">
+</head>
+<body>
+  <div class="navbar">
+    <div class="logo">
+        <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+    </div>
+    <div class="menu-toggle">&#9776;</div>
+    <ul class="nav-links">
+        <li><a href="homepage.html">Home</a></li>
+        <li><a href="plans.html" >Plans</a></li>
+        <li><a href="recharge.html" class="active">Recharge</a></li>
+        <li><a href="about.html">About Us</a></li>
+        <li class="icon"><a href="contact.html">Contact us </a></li>
+          <li class="nav-item dropdown">
+              <a href="" id="authLink" class="nav-link">Sign Up</a>
+              <div class="dropdown-menu" id="userDropdown">
+                <span id="userNumber"></span>
+                <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                <button id="logout" style="display: none;">logout</button>
+            </div>
+          </li>
+    </ul>
+</div>
+<br><br><br><br><br>
+  <div class="card">
+    <h2 style="text-align: center; color: #4b7bec;">Quick Recharge</h2>
+    <div class="recharge-section">
+      <span class="country-code">+91</span>
+      <input type="tel" id="phoneNumber" name="number" maxlength="10" placeholder="Enter number" required>
+      <p class="error" id="phoneError"></p>
+      <button type="button" id="rechargeButton" onclick="quickRecharge()" disabled>Recharge</button>
+    </div>
+  </div>
+
+  <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
+  <script>
+    // Clear stored data when user comes back to home page
+
+    function quickRecharge() {
+        let number = document.getElementById("phoneNumber").value.trim();
+        let errorMsg = document.getElementById("phoneError");
+
+        // Check if number is valid
+        if (!/^[6-9]\d{9}$/.test(number)) {
+            errorMsg.textContent = "Enter a valid 10-digit phone number!";
+        } else {
+            errorMsg.textContent = "";
+            localStorage.setItem("phoneNumber", number);
+            localStorage.setItem("cameFromrecharge", "true");
+
+            // Redirect to Plans page
+            window.location.href = "plans.html";
+        }
+    }
+    -
+
+    // Enable button only if input is valid
+    document.getElementById("phoneNumber").addEventListener("input", function (e) {
+        let value = e.target.value.replace(/\D/g, ""); // Remove non-numeric characters
+        if (value.length > 10) value = value.slice(0, 10); // Ensure only 10 digits
+
+        e.target.value = value;
+        document.getElementById("rechargeButton").disabled = value.length !== 10;
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+    let loggedin = localStorage.getItem("loggedin") === "true";
+    let logoutBtn = document.getElementById("logoutBtn");
+    let logoutSection = document.getElementById("logout");
+
+    if (logoutBtn && logoutSection) {
+        if (loggedin) {
+            logoutSection.style.display = "block";
+            logoutBtn.style.display = "none";
+        } else {
+            logoutSection.style.display = "none";
+            logoutBtn.style.display = "block";
+        }
+    }
+});
+let logoutSection=document.getElementById("logout");
+logoutSection.addEventListener("click", () => {
+    localStorage.removeItem("loggedin");
+    window.location.reload(); // Refresh to update UI
+});
+  </script>
+</body>
+</html>

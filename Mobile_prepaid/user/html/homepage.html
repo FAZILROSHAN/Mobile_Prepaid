@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/homepage.css">
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css"> <!-- Load after homepage.css to ensure navbar styles take precedence -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <style>
+        #logoutBtn:hover {
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi Charge Logo">
+        </div>
+        <div class="menu-toggle">☰</div>
+        <ul class="nav-links">
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="plans.html">Plans</a></li>
+            <li><a href="recharge.html">Recharge</a></li>
+            <li><a href="about.html">About Us</a></li>
+            <li class="icon"><a href="contact.html">Contact Us</a></li>
+            <li class="nav-item dropdown">
+                <a id="authLink" class="nav-link">Sign Up</a>
+                <div class="dropdown-menu" id="userDropdown">
+                    <span id="userNumber"></span>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                    <button id="profile" style="display: none;" onclick="window.location.href='user_dashboard.html'">Profile</button>
+                    <button id="logout" style="display: none;">Logout</button>
+                </div>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            let loggedin = localStorage.getItem("loggedin") === "true";
+            let logoutBtn = document.getElementById("logoutBtn");
+            let logoutSection = document.getElementById("logout");
+            let profile = document.getElementById("profile");
+            let userNumberDisplay = document.getElementById("phoneNumber");
+            let authLink = document.getElementById("authLink");
+
+            if (loggedin) {
+                let userNumber = localStorage.getItem("phoneNumber") || "User"; 
+                authLink.textContent = userNumber; 
+                logoutSection.style.display = "block";
+                profile.style.display = "block";
+                logoutBtn.style.display = "none";
+            } else {
+                authLink.textContent = "Sign Up"; 
+                logoutSection.style.display = "none";
+                profile.style.display = "none";
+                logoutBtn.style.display = "block";
+            }
+
+            if (logoutSection) {
+                logoutSection.addEventListener("click", () => {
+                    localStorage.removeItem("loggedin");
+                    localStorage.removeItem("phoneNumber");
+                    window.location.reload();
+                });
+            }
+        });
+    </script>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Recharge & Stay Connected</h1>
+            <p>Quick, easy & secure mobile recharges at your fingertips</p>
+        </div>
+    </section>
+
+    <!-- Recharge Section -->
+    <section id="recharge-section" class="recharge-container">
+        <form id="rechargeForm" action="plans.html" method="GET">
+            <div class="recharge-card">
+                <h2>Quick Recharge</h2>
+                <div class="input-group">
+                    <button class="country-code">+91</button>
+                    <input type="tel" id="phoneNumber" name="number" maxlength="10" placeholder="Enter mobile number" required>
+                </div>
+                <p class="error" id="phoneError"></p>
+                <div class="button-container">
+                    <button type="button" id="rechargeButton" disabled>Proceed to Recharge</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    <!-- Timeline Section -->
+    <div class="timeline">
+        <div class="stage">
+            <h3>Enter Number</h3>
+            <p>Input your 10-digit mobile number to start.</p>
+            <div class="timeline-icon"><i class="fas fa-phone"></i></div> <!-- Using .timeline-icon to avoid conflicts -->
+        </div>
+        <div class="stage">
+            <h3>Choose Plan</h3>
+            <p>Select from a variety of prepaid plans.</p>
+            <div class="timeline-icon"><i class="fas fa-list"></i></div> <!-- Using .timeline-icon to avoid conflicts -->
+        </div>
+        <div class="stage">
+            <h3>Make Payment</h3>
+            <p>Pay securely using your preferred method.</p>
+            <div class="timeline-icon"><i class="fas fa-credit-card"></i></div> <!-- Using .timeline-icon to avoid conflicts -->
+        </div>
+        <div class="stage">
+            <h3>Stay Connected</h3>
+            <p>Enjoy uninterrupted service instantly.</p>
+            <div class="timeline-icon"><i class="fas fa-signal"></i></div> <!-- Using .timeline-icon to avoid conflicts -->
+        </div>
+    </div>
+
+    <!-- Plans Section -->
+    <section id="plans">
+        <a href="plans.html" class="section-title-link"><h2>TOP #3 Plans</h2></a>
+        <section id="popular-plans">
+            <a href="plans.html#popular" class="section-title-link"><h3>Popular Plans</h3></a>
+            <div class="plans-container">
+                <div class="plan-card">
+                    <div class="plan-price">₹499</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">56 Days</div>
+                        <div class="plan-data">1.5GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-price">₹479</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">56 Days</div>
+                        <div class="plan-data">1.5GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-price">₹549</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">56 Days</div>
+                        <div class="plan-data">2GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section id="basic-plans">
+            <a href="plans.html#basic" class="section-title-link"><h3>Basic Plans</h3></a>
+            <div class="plans-container">
+                <div class="plan-card">
+                    <div class="plan-price">₹199</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">14 Days</div>
+                        <div class="plan-data">1GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-price">₹219</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">21 Days</div>
+                        <div class="plan-data">1GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+                <div class="plan-card">
+                    <div class="plan-price">₹249</div>
+                    <div class="plan-details">
+                        <div class="plan-validity">28 Days</div>
+                        <div class="plan-data">1.5GB/day</div>
+                    </div>
+                    <div class="plan-benefits">
+                        <span>Unlimited Calls</span>
+                        <span>100 SMS/day</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="advertisement">
+        <div class="ads-container">
+            <a href="#" class="ad-link">
+                <div class="ad-card">
+                    <div class="ad-content">
+                        <h3>Special Offer</h3>
+                        <p>Get 10% extra data on all recharges</p>
+                    </div>
+                </div>
+            </a>
+            <a href="#" class="ad-link">
+                <div class="ad-card">
+                    <div class="ad-content">
+                        <h3>New User?</h3>
+                        <p>Use code WELCOME for ₹50 cashback</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <section class="testimonials-section">
+        <h2>Testimonials</h2>
+        <div class="testimonials-border-container">
+            <div class="testimonials-title-column">
+                <h3>What Our Customers Say</h3>
+            </div>
+            <div class="testimonials-column-2">
+                <div class="testimonials-cards-2">
+                    <div class="testimonial-card-2">
+                        <div class="testimonial-stars-2">★★★★★</div>
+                        <p>"Super fast recharge process!"</p>
+                        <div class="testimonial-avatar-2"></div>
+                        <p>Amit Sharma</p>
+                    </div>
+                    <div class="testimonial-card-2">
+                        <div class="testimonial-stars-2">★★★★☆</div>
+                        <p>"Great plans, affordable prices."</p>
+                        <div class="testimonial-avatar-2"></div>
+                        <p>Priya Patel</p>
+                    </div>
+                </div>
+            </div>
+            <div class="testimonials-column-3">
+                <div class="testimonials-cards-3">
+                    <div class="testimonial-card-3">
+                        <div class="testimonial-stars-3">★★★★★</div>
+                        <p>"Customer support is top-notch!"</p>
+                        <div class="testimonial-avatar-3"></div>
+                        <p>Rahul Singh</p>
+                    </div>
+                    <div class="testimonial-card-3">
+                        <div class="testimonial-stars-3">★★★★☆</div>
+                        <p>"Reliable network coverage."</p>
+                        <div class="testimonial-avatar-3"></div>
+                        <p>Neha Gupta</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Back to Top Button -->
+    <a href="#" id="backToTop" class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </a>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Mobi Comm Ltd. | Follow us: <a href="#"><i class="fab fa-facebook"></i> Facebook</a> | <a href="#"><i class="fab fa-instagram"></i> Instagram</a></p>
+    </footer>
+
+    <script src="/Mobile_prepaid/user/Js/homepage.js"></script>
+    <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'919952159ae953af',t:'MTc0MDgzOTA5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91a20e31df73673e',t:'MTc0MDkzMDY4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+</body>
+</html>

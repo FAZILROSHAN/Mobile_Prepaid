@@ -1,0 +1,243 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #ddedfb; ;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    width: 400px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-box {
+    padding: 30px;
+    text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 25px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #444;
+}
+
+.input-area {
+    text-align: left;
+}
+
+.input-area p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.mobile-input {
+    display: flex;
+    margin-bottom: 25px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.country-code {
+    padding: 12px;
+    background-color: #f8f9fa;
+    border: 1px solid #ddd;
+    border-right: none;
+    font-size: 14px;
+    color: #555;
+}
+
+#mobileNumber {
+    padding: 1px;
+    border: 1px solid #ddd;
+    flex-grow: 1;
+    outline: none;
+    font-size: 14px;
+    color: #333;
+    transition: border-color 0.3s ease;
+}
+
+#mobileNumber:focus {
+    border-color: #007bff;
+}
+
+.user-btn {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #28a745, #218838);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.user-btn:hover {
+    background: linear-gradient(135deg, #315d3a, #1e7e34);
+    transform: translateY(-2px);
+}
+
+/* OTP Popup Styles */
+.popup {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-content {
+    background-color: #fff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    position: relative;
+    width: 90%;
+    max-width: 400px;
+    animation: slideIn 0.3s ease-in-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.close-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+    transition: color 0.3s ease;
+}
+
+.close-btn:hover {
+    color: #333;
+}
+
+.otp-box {
+    text-align: left;
+}
+
+.otp-box h2 {
+    margin-bottom: 20px;
+    font-size: 22px;
+    font-weight: 600;
+    color: #444;
+    text-align: center;
+}
+
+.otp-box .input-area p {
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: #555;
+}
+
+.otp-input-fields {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 25px;
+    gap: 10px;
+}
+
+.otp-field {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 18px;
+    outline: none;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.otp-field:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
+}
+
+.verify-otp {
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.verify-otp:hover {
+    background: linear-gradient(135deg, #0056b3, #004080);
+    transform: translateY(-2px);
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .login-box {
+        padding: 20px;
+    }
+
+    .mobile-input {
+        flex-direction: column;
+    }
+
+    .country-code, #mobileNumber {
+        width: 100%;
+        margin-bottom: 10px;
+        box-sizing: border-box;
+    }
+
+    .popup-content {
+        width: 90%;
+        margin: 20px auto;
+    }
+
+    .otp-field {
+        width: 40px;
+        height: 40px;
+        font-size: 16px;
+    }
+}

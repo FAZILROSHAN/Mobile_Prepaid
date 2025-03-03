@@ -1,0 +1,665 @@
+/* General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f0f2fa;
+    color: #2d3748;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin-top: 60px;
+    color: white;
+    padding: 0 20px;
+}
+
+.hero-content {
+    max-width: 800px;
+}
+
+.hero h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+    margin-bottom: 2rem;
+}
+
+/* Recharge Section */
+.recharge-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: -60px auto 50px;
+    padding: 0 20px;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 540px;
+    box-sizing: border-box;
+}
+
+.recharge-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(79, 70, 229, 0.15);
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.recharge-card h2 {
+    color: #4f46e5;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+    align-items: center;
+    width: 100%;
+}
+
+.country-code {
+    background: #4f46e5;
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    font-weight: 500;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+    flex-shrink: 0;
+}
+
+#phoneNumber {
+    flex: 1;
+    padding: 12px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#phoneNumber:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+.error {
+    color: #e53e3e;
+    margin-top: 5px;
+    font-size: 0.9rem;
+    text-align: center;
+    width: 100%;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+}
+
+#rechargeButton {
+    background: #4f46e5;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-size: 1rem;
+    box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+}
+
+#rechargeButton:hover {
+    background: #4338ca;
+    transform: translateY(-2px);
+}
+
+#rechargeButton:disabled {
+    background: #cbd5e0;
+    cursor: not-allowed;
+    color: #718096;
+    box-shadow: none;
+    transform: none;
+}
+
+/* Timeline Section */
+.timeline {
+    position: relative;
+    width: 80%;
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 20px 0;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    width: 4px;
+    background: linear-gradient(to bottom, #4f46e5, #6366f1);
+    top: 0;
+    height: var(--line-height, 0);
+    left: 50%;
+    transform: translateX(-50%);
+    transition: height 0.3s ease;
+}
+
+.stage {
+    position: relative;
+    background: #f8fafc;
+    width: 40%;
+    padding: 20px;
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.stage:nth-child(odd) {
+    left: 5%;
+}
+
+.stage:nth-child(even) {
+    left: 55%;
+}
+
+.stage.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stage h3 {
+    color: #4f46e5;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.stage p {
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+.timeline-icon { /* Renamed from .icon to .timeline-icon to avoid conflicts with navbar */
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    background: #4f46e5;
+    color: white;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    box-shadow: 0 4px 10px rgba(79, 70, 229, 0.3);
+}
+
+@media (max-width: 768px) {
+    .timeline::after {
+        left: 10px;
+    }
+    .stage {
+        width: 80%;
+        left: 10%;
+        text-align: left;
+    }
+    .stage:nth-child(even) {
+        left: 10%;
+    }
+    .timeline-icon { /* Updated media query for renamed class */
+        left: -15px;
+    }
+}
+
+/* Plans Section */
+#plans {
+    text-align: center;
+    padding: 40px 20px;
+    background: white;
+    margin: 40px auto;
+    max-width: 1200px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.section-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+#plans h2, #plans h3 {
+    color: #4f46e5;
+    margin-bottom: 30px;
+    font-weight: 600;
+}
+
+#plans h2 {
+    font-size: 2rem;
+}
+
+#plans h3 {
+    font-size: 1.5rem;
+    margin-top: 40px;
+}
+
+.plans-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    padding: 10px;
+}
+
+/* Plan Cards */
+.plan-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.plan-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(79, 70, 229, 0.1);
+    border-color: #4f46e5;
+}
+
+.plan-price {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #4f46e5;
+}
+
+.plan-details {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0;
+}
+
+.plan-validity, .plan-data {
+    font-weight: 500;
+}
+
+.plan-benefits {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #718096;
+}
+
+/* Advertisement Section */
+#advertisement {
+    padding: 40px 20px;
+    margin: 40px auto;
+    max-width: 1200px;
+}
+
+.ads-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.ad-card {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    height: 200px;
+    position: relative;
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+    transition: all 0.3s ease;
+}
+
+.ad-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.ad-content h3 {
+    margin: 0 0 10px;
+    font-size: 1.4rem;
+}
+
+.ad-content p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.ad-link {
+    text-decoration: none;
+}
+
+.ad-card:hover {
+    transform: scale(1.05);
+}
+
+/* Testimonials Section */
+.testimonials-section {
+    text-align: center;
+    margin: 100px 0;
+    position: relative;
+    padding: 20px;
+}
+
+.testimonials-section h2 {
+    font-size: 36px;
+    color: #4f46e5;
+    margin-bottom: 30px;
+}
+
+.testimonials-border-container {
+    border: 1px solid rgba(79, 70, 229, 0.1);
+    border-radius: 12px;
+    padding: 20px;
+    width: 1100px;
+    height: 500px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: white;
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.05);
+    position: relative;
+    overflow: hidden;
+}
+
+.testimonials-title-column {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    background: transparent;
+}
+
+.testimonials-title-column h3 {
+    font-size: 48px;
+    color: #4f46e5;
+    margin: 0;
+}
+
+.testimonials-column-2, .testimonials-column-3 {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow: hidden;
+}
+
+.testimonials-cards-2, .testimonials-cards-3 {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    height: 100%;
+    animation: scroll-vertical 20s linear infinite;
+}
+
+.testimonials-cards-2 {
+    animation-delay: -10s;
+}
+
+@keyframes scroll-vertical {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-50%); }
+    100% { transform: translateY(0); }
+}
+
+.testimonial-card-2, .testimonial-card-3 {
+    background: linear-gradient(145deg, #6366f1, #4f46e5);
+    color: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 200px;
+    height: auto;
+    min-height: 200px;
+    margin: 10px 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.testimonial-stars-2, .testimonial-stars-3 {
+    color: #ffd700;
+    margin-bottom: 10px;
+}
+
+.testimonial-avatar-2, .testimonial-avatar-3 {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    margin: 10px 0;
+}
+
+/* Back to Top Button */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: #4f46e5;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 1000;
+}
+
+.back-to-top.visible {
+    opacity: 1;
+    visibility: visible;
+}
+
+.back-to-top:hover {
+    background: #4338ca;
+    transform: translateY(-5px);
+}
+
+/* Footer */
+footer {
+    background: #4f46e5;
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+    margin-top: 60px;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+    transition: opacity 0.3s ease;
+    margin: 0 5px;
+}
+
+footer a:hover {
+    opacity: 0.8;
+}
+
+/* Media Queries */
+@media (max-width: 1200px) {
+    .testimonials-border-container {
+        width: 90%;
+        height: auto;
+        min-height: 500px;
+    }
+    .hero {
+        height: 250px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero {
+        height: 200px;
+        margin-top: 70px;
+    }
+    .hero h1 {
+        font-size: 2rem;
+    }
+    .hero p {
+        font-size: 1rem;
+    }
+    .recharge-container {
+        margin: 20px auto 40px;
+        width: 90%;
+        padding: 0 15px;
+    }
+    .recharge-card {
+        padding: 25px 20px;
+    }
+    .plans-container {
+        grid-template-columns: 1fr;
+    }
+    .testimonials-section {
+        margin: 50px 0;
+    }
+    .testimonials-border-container {
+        flex-direction: column;
+        height: auto;
+        padding: 20px;
+    }
+    .testimonials-title-column {
+        width: 100%;
+        padding: 20px 0;
+        margin-bottom: 20px;
+    }
+    .testimonials-title-column h3 {
+        font-size: 24px;
+    }
+    .testimonials-column-2, .testimonials-column-3 {
+        width: 100%;
+        padding: 10px 0;
+        overflow-x: auto;
+    }
+    .testimonials-cards-2, .testimonials-cards-3 {
+        flex-direction: row;
+        animation: scroll-horizontal 20s linear infinite;
+        width: 200%;
+    }
+    .testimonials-cards-2 {
+        animation-delay: -10s;
+    }
+    @keyframes scroll-horizontal {
+        0% { transform: translateX(0); }
+        50% { transform: translateX(-50%); }
+        100% { transform: translateX(0); }
+    }
+    .testimonial-card-2, .testimonial-card-3 {
+        min-width: 250px;
+        margin: 0 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .plan-card {
+        padding: 20px;
+    }
+    .recharge-container {
+        width: 92%;
+        padding: 0 10px;
+        margin: 20px auto 40px;
+    }
+    .recharge-card {
+        padding: 20px 15px;
+    }
+    .input-group {
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+    }
+    .country-code {
+        padding: 10px 8px;
+        min-width: 50px;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #phoneNumber {
+        padding: 10px;
+        font-size: 0.9rem;
+        min-height: 40px;
+    }
+    #rechargeButton {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .testimonials-title-column h3 {
+        font-size: 20px;
+    }
+    .back-to-top {
+        width: 40px;
+        height: 40px;
+        right: 20px;
+        bottom: 20px;
+    }
+}
+
+@media (max-width: 350px) {
+    .recharge-container {
+        width: 95%;
+        padding: 0 5px;
+    }
+    .recharge-card {
+        padding: 15px 10px;
+    }
+    .input-group {
+        gap: 5px;
+    }
+    .country-code {
+        min-width: 45px;
+        padding: 8px 5px;
+    }
+    #phoneNumber {
+        padding: 8px;
+    }
+}

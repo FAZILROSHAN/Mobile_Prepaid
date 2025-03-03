@@ -1,0 +1,172 @@
+/* Main navbar container styling */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Ensures logo on left, nav-links on right */
+    align-items: center;
+    padding: 15px 20px;
+    background: linear-gradient(to bottom, #1a335a, rgb(48, 54, 62));
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 100;
+    color: #eef3f9;
+    transition: background-color 0.3s ease-in-out, padding 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Navbar styling when scrolled */
+.navbar.scrolled {
+    background: #222741 !important;
+    padding: 10px 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Logo container styling */
+.logo {
+    padding-left: 15px; /* Increased left padding for breathing room */
+    flex-shrink: 0; /* Prevent logo from shrinking */
+}
+
+/* Logo image styling */
+.logo img {
+    height: 50px;
+    max-width: 150px; /* Increased max-width to accommodate logo text if needed */
+    object-fit: contain; /* Ensures the image scales properly */
+}
+
+/* Navigation links container */
+.nav-links {
+    display: flex;
+    list-style: none;
+    align-items: center;
+    margin-right: 30px; /* Space from the right edge */
+    margin-left: 20px; /* Additional spacing from logo */
+    position: relative;
+    z-index: 101; /* Ensure it’s above other elements */
+    flex-grow: 1; /* Allows nav-links to grow and fill available space */
+    justify-content: flex-end; /* Ensures items align to the right */
+}
+
+/* Navigation link styling */
+.nav-links a {
+    text-decoration: none;
+    color: rgb(240, 238, 238);
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: 0.3s;
+    outline: none; /* Remove any outline that could cause artifacts */
+}
+
+/* Active page link styling */
+.nav-links a.active {
+    background-color: #eef3f9;
+    color: rgb(12, 9, 9);
+}
+
+/* Hover effect for navigation links */
+.nav-links a:hover {
+    background: rgba(72, 109, 164, 0.3);
+}
+
+/* Mobile menu toggle button */
+.menu-toggle {
+    display: none;
+    font-size: 30px;
+    cursor: pointer;
+    color: white;
+    margin-right: 40px;
+}
+
+/* Mobile responsive styles */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        background: #6832cc;
+        text-align: center;
+        padding: 10px 0;
+        margin-left: 0; /* Reset for mobile */
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links li {
+        margin: 10px 0;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .dropdown-menu {
+        position: static;
+        display: none;
+    }
+
+    .dropdown-menu.active {
+        display: block;
+    }
+
+    .logo {
+        padding-left: 10px; /* Reduce padding on mobile if needed */
+    }
+}
+
+/* Ensure desktop layout */
+@media (min-width: 769px) {
+    .menu-toggle {
+        display: none !important; /* Force hide on desktop */
+    }
+
+    .nav-links {
+        position: relative; /* Ensure proper stacking */
+        display: flex;
+    }
+}
+
+/* Icon container for hover effects */
+.icon {
+    position: relative;
+}
+
+/* Tooltip styling for icons */
+.hover-box {
+    display: none;
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #ffffff; /* Ensure white background */
+    color: #333333; /* Ensure dark text */
+    padding: 5px 20px;
+    border-radius: 5px;
+    font-size: 12px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    border: 1px solid #ccc; /* Add border to prevent rendering issues */
+    outline: none; /* Remove any outline */
+}
+
+/* Show tooltip on icon hover */
+.icon:hover .hover-box {
+    display: block;
+}
+
+/* Dropdown menu styling */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.nav-item:hover .dropdown-menu {
+    display: block;
+}

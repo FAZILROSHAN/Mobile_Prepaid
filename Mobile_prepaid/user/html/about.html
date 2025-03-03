@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+            text-align: center;
+            background: #ffffff;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        .header {
+            background-color: #0077b6;
+            color: white;
+            padding: 20px;
+            border-radius: 10px 10px 0 0;
+        }
+        .content {
+            padding: 20px;
+            text-align: left;
+        }
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-radius: 0 0 10px 10px;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer .footer-section {
+            flex: 1;
+            margin: 10px;
+            min-width: 200px;
+        }
+        .footer .footer-section h3 {
+            margin-bottom: 10px;
+            color: #00a8e8;
+        }
+        .footer a {
+            color: #d1d1d1;
+            text-decoration: none;
+            display: block;
+            margin: 5px 0;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #00a8e8;
+        }
+        .highlight {
+            font-weight: bold;
+            color: #0077b6;
+        }
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            .footer {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+        </div>
+        <div class="menu-toggle">&#9776;</div>
+        <ul class="nav-links">
+            <li><a href="homepage.html">Home</a></li>
+            <li><a href="plans.html" >Plans</a></li>
+            <li><a href="recharge.html">Recharge</a></li>
+            <li><a href="about.html" class="active">About Us</a></li>
+            <li class="icon"><a href="contact.html">Contact us </a></li>
+              <li class="nav-item dropdown">
+                  <a href="" id="authLink" class="nav-link">Sign Up</a>
+                  <div class="dropdown-menu" id="userDropdown">
+                    <span id="userNumber"></span>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                    <button id="logout" style="display: none;">logout</button>
+                </div>
+              </li>
+        </ul>
+    </div>
+    <br><br><br><br><br>
+    <div class="container">
+        <div class="header">
+            <h1>About Mobi Comm Ltd.</h1>
+        </div>
+        <div class="content">
+            <p>Welcome to <span class="highlight">Mobi Comm Ltd.</span>, a leading prepaid mobile service provider. Our mission is to keep you connected with seamless network coverage, affordable plans, and excellent customer service.</p>
+            <h2>Our Vision</h2>
+            <p>We aim to revolutionize the mobile industry with cutting-edge technology and customer-centric solutions. Our goal is to ensure <strong>seamless connectivity</strong> for all users, no matter where they are.</p>
+            <h2>Why Choose Mobi Comm?</h2>
+            <ul>
+                <li><strong>Affordable Plans:</strong> Get the best value for your money with a variety of prepaid options.</li>
+                <li><strong>Nationwide Coverage:</strong> Stay connected wherever you go with our extensive network.</li>
+                <li><strong>Customer Support:</strong> Our 24/7 support team is always ready to assist you.</li>
+                <li><strong>Fast Recharge:</strong> Quick and hassle-free recharge options at your fingertips.</li>
+            </ul>
+            <h2>Our Services</h2>
+            <p>We offer a wide range of prepaid plans, including:</p>
+            <ul>
+                <li>Unlimited talk and text options</li>
+                <li>High-speed data packages</li>
+                <li>International roaming</li>
+                <li>Exclusive offers for long-term users</li>
+            </ul>
+            <h2>Join Us Today</h2>
+            <p>Be a part of the <span class="highlight">Mobi Comm</span> family and experience the future of mobile connectivity. Recharge your plan today and stay connected with ease!</p>
+        </div>
+        <div class="footer">
+            <div class="footer-section">
+                <h3>Company</h3>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Investor Relations</a>
+                <a href="#">Blog</a>
+            </div>
+            <div class="footer-section">
+                <h3>Support</h3>
+                <a href="#">Customer Service</a>
+                <a href="#">FAQs</a>
+                <a href="#">Network Coverage</a>
+                <a href="#">Community Forum</a>
+            </div>
+            <div class="footer-section">
+                <h3>Legal</h3>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Data Protection</a>
+                <a href="#">Cookie Policy</a>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <a href="#">Facebook</a>
+                <a href="#">Twitter</a>
+                <a href="#">Instagram</a>
+                <a href="#">LinkedIn</a>
+                <a href="#">YouTube</a>
+            </div>
+            <div class="footer-section">
+                <h3>Download Our App</h3>
+                <a href="#">Google Play Store</a>
+                <a href="#">Apple App Store</a>
+            </div>
+        </div>
+    </div>
+    <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
+    <script>
+         document.addEventListener("DOMContentLoaded", () => {
+    let loggedin = localStorage.getItem("loggedin") === "true";
+    let logoutBtn = document.getElementById("logoutBtn");
+    let logoutSection = document.getElementById("logout");
+
+    if (logoutBtn && logoutSection) {
+        if (loggedin) {
+            logoutSection.style.display = "block";
+            logoutBtn.style.display = "none";
+        } else {
+            logoutSection.style.display = "none";
+            logoutBtn.style.display = "block";
+        }
+    }
+});
+let logoutSection=document.getElementById("logout");
+logoutSection.addEventListener("click", () => {
+    localStorage.removeItem("loggedin");
+    window.location.reload(); // Refresh to update UI
+});
+    </script>
+</body>
+</html>
