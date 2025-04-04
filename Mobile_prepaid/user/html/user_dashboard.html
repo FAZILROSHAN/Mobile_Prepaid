@@ -1282,6 +1282,25 @@
 
         // Load Saved Data
         document.addEventListener('DOMContentLoaded', () => {
+            const loggedin = localStorage.getItem('loggedin') === 'true';
+            const logoutBtn = document.getElementById('logoutBtn');
+            const profileBtn = document.getElementById('profile');
+            const logoutSection = document.getElementById('logout');
+            const userNumber = document.getElementById('userNumber');
+
+            if (loggedin) {
+                logoutSection.style.display = 'block';
+                profileBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                const phone = localStorage.getItem('userPhone');
+                userNumber.textContent = phone ? `+91 ${phone}` : 'USER'; // Fallback if no phone
+            } else {
+                logoutSection.style.display = 'none';
+                profileBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                window.location.href = 'get_phone.html'; // Redirect to login if not logged in
+            }
+
             const savedName = localStorage.getItem('userName') || 'Karthik Rajan';
             const savedEmail = localStorage.getItem('userEmail') || 'karthik.rajan@example.com';
             const savedAltNumber = localStorage.getItem('altNumber') || '';
@@ -1290,26 +1309,8 @@
             document.getElementById('altNumber').value = savedAltNumber;
             document.getElementById('userName').textContent = savedName;
             document.getElementById('welcomeName').textContent = savedName.split(' ')[0];
-
-            const loggedin = localStorage.getItem("loggedin") === "true";
-            const logoutBtn = document.getElementById("logoutBtn");
-            const profileBtn = document.getElementById("profile");
-            const logoutSection = document.getElementById("logout");
-
-            if (loggedin) {
-                logoutSection.style.display = "block";
-                profileBtn.style.display = "block";
-                logoutBtn.style.display = "none";
-            } else {
-                logoutSection.style.display = "none";
-                profileBtn.style.display = "none";
-                logoutBtn.style.display = "block";
-            }
-
-            logoutSection.addEventListener("click", () => {
-                localStorage.removeItem("loggedin");
-                window.location.reload();
-            });
+            document.getElementById('userPhone').textContent = userNumber.textContent;
+            document.getElementById('lastLogin').textContent = `Last Login: ${new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}`;
         });
     </script>
     <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'91a638ac781553f9',t:'MTc0MDk3NDM2OC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>

@@ -14,7 +14,7 @@
 <body>
     <div class="navbar">
         <div class="logo">
-            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+            <img src="/Mobile_prepaid/images/267d178586383a2541d409b8e8dd90a7.png" alt="Mobi charge">
         </div>
         <div class="menu-toggle">&#9776;</div>
         <ul class="nav-links">
@@ -93,15 +93,17 @@
                 // Update payment details
                 document.getElementById("dynamic-content").innerHTML = `
                     <h3><i class="fas fa-phone"></i> Phone Number: ${number}</h3>
-                    <h3><i class="fas fa-tag"></i> Selected Plan: ${plan.split(",")[0].split(":")[1]}</h3>
-                    <p><i class="fas fa-rupee-sign"></i> Amount: ${plan.split(",")[1].split(":")[1]}</p>
-                    <p><i class="fas fa-wifi"></i> Data per Day: ${plan.split(",")[3].split(":")[1]}</p>
-                    <p><i class="fas fa-calendar-alt"></i> Validity: ${plan.split(",")[2].split(":")[1]}</p>
+                    <h3><i class="fas fa-tag"></i> Selected Plan: ${plan.split(",")[1].split(":")[1]}</h3>
+                    <p><i class="fas fa-rupee-sign"></i> Amount: ${plan.split(",")[2].split(":")[1]}</p>
+                    <p><i class="fas fa-wifi"></i> Data per Day: ${plan.split(",")[4].split(":")[1].split("+")[0]}</p>
+                    <p><i class="fas fa-calendar-alt"></i> Validity: ${plan.split(",")[3].split(":")[1]}</p>
                 `;
             } else {
                 // Redirect if data is missing
                 window.location.href = "plans.html";
             }
+
+          
 
             // Add event listeners to payment buttons
             const paymentBtns = document.querySelectorAll('.payment-btn');

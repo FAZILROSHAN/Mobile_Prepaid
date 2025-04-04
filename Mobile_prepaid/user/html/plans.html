@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mobicharge plans</title>
+    <title>Mobicharge Plans</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/Mobile_prepaid/user/css/plans.css">
@@ -13,23 +13,23 @@
     <!-- Navbar -->
     <div class="navbar">
         <div class="logo">
-            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+            <img src="/Mobile_prepaid/images/267d178586383a2541d409b8e8dd90a7.png" alt="Mobi charge">
         </div>
-        <div class="menu-toggle">&#9776;</div>
+        <div class="menu-toggle">☰</div>
         <ul class="nav-links">
             <li><a href="homepage.html">Home</a></li>
             <li><a href="plans.html" class="active">Plans</a></li>
             <li><a href="recharge.html">Recharge</a></li>
             <li><a href="about.html">About Us</a></li>
-            <li class="icon"><a href="contact.html">Contact us </a></li>
-              <li class="nav-item dropdown">
-                  <a href="" id="authLink" class="nav-link">Sign Up</a>
-                  <div class="dropdown-menu" id="userDropdown">
+            <li class="icon"><a href="contact.html">Contact us</a></li>
+            <li class="nav-item dropdown">
+                <a href="" id="authLink" class="nav-link">Sign Up</a>
+                <div class="dropdown-menu" id="userDropdown">
                     <span id="userNumber"></span>
                     <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
-                    <button id="logout" style="display: none;">logout</button>
+                    <button id="logout" style="display: none;">Logout</button>
                 </div>
-              </li>
+            </li>
         </ul>
     </div>
 
@@ -50,7 +50,7 @@
                 </button>
             </div>
         </div>
-            
+
         <!-- Dropdown Filters -->
         <div class="filters-wrapper">
             <div class="row g-3 mb-4">
@@ -59,16 +59,18 @@
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" class="form-control search-input" 
                                id="searchInput" 
-                               placeholder="Search by amount or data...">
+                               placeholder="Search by amount, data, or benefits...">
                     </div>
                 </div>
                 <div class="col-6 col-md-3">
-                    <select class="form-select filter-select" id="amountFilter">
-                        <option value="">All Amounts</option>
-                        <option value="199">₹199</option>
-                        <option value="299">₹299</option>
-                        <option value="399">₹399</option>
-                    </select>
+                    <div class="row g-2">
+                        <div class="col-6">
+                            <input type="number" class="form-control" id="minAmount" placeholder="Min Amount" min="0">
+                        </div>
+                        <div class="col-6">
+                            <input type="number" class="form-control" id="maxAmount" placeholder="Max Amount" min="0">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-6 col-md-3">
                     <select class="form-select filter-select" id="validityFilter">
@@ -84,14 +86,13 @@
         <!-- Categories -->
         <div class="category-tabs">
             <div class="btn-group w-100 mb-4 flex-wrap" role="group">
-                <button type="button" class="category-btn" data-category="all">All</button>
-                <button type="button" class="category-btn active" data-category="recommended">Recommended</button>
+                <button type="button" class="category-btn active" data-category="all">All</button>
+                <button type="button" class="category-btn" data-category="recommended">Recommended</button>
                 <button type="button" class="category-btn" data-category="popular">Popular</button>
                 <button type="button" class="category-btn" data-category="combo">Combo</button>
                 <button type="button" class="category-btn" data-category="basic">Basic</button>
                 <button type="button" class="category-btn" data-category="long_term">Long-Term</button>
-                <button type="button" class="category-btn" data-category="data_booster">Data boosters</button>
-                
+                <button type="button" class="category-btn" data-category="data_booster">Data Boosters</button>
             </div>
         </div>
 

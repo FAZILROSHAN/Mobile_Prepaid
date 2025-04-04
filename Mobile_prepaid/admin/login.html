@@ -87,26 +87,38 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
     <script>
-        document.getElementById('loginForm').addEventListener('submit', (e) => {
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('adminEmail').value;
             const password = document.getElementById('adminPassword').value;
             const errorMessage = document.getElementById('errorMessage');
             const loadingOverlay = document.getElementById('loadingOverlay');
 
-            // Hardcoded credentials for demo (replace with real authentication in production)
-            const validEmail = 'admin@mob.comm';
-            const validPassword = 'admin123';
+            loadingOverlay.style.display = 'flex'; // Show loading animation
 
-            if (email === validEmail && password === validPassword) {
-                loadingOverlay.style.display = 'flex';
-                setTimeout(() => {
-                    window.location.href = 'admin.html';
-                }, 1000); // 1-second delay to show loading
-            } else {
+            try {
+                const response = await fetch('http://localhost:8083/auth/admin-login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Invalid email or password');
+                }
+
+                const data = await response.json();
+                localStorage.setItem('adminToken', data.token); // Store JWT token
+                window.location.href = 'admin.html'; // Redirect to admin page
+
+            } catch (error) {
+                errorMessage.textContent = error.message;
                 errorMessage.style.display = 'block';
                 setTimeout(() => errorMessage.style.display = 'none', 3000);
+            } finally {
+                loadingOverlay.style.display = 'none'; // Hide loading animation
             }
         });
     </script>

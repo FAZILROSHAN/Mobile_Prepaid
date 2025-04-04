@@ -6,29 +6,69 @@
     <title>Login</title>
     <link rel="stylesheet" href="/Mobile_prepaid/user/css/get_phone.css">
     <link rel="stylesheet" href="/Mobile_prepaid/user/css/navbar.css">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+            text-align: center;
+        }
+        .popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            justify-content: center;
+            align-items: center;
+        }
+        .popup-content {
+            background: white;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
+        .otp-input-fields input {
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin: 2px;
+            transition: border-color 0.2s ease-in-out;
+        }
+        .otp-field:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0,123,255,0.3);
+        }
+    </style>
 </head>
 <body>
     <div class="navbar">
         <div class="logo">
-            <img src="/Mobile_prepaid/images/68e69fa7cd8bd1dd012be546517a91c6.png" alt="Mobi charge">
+            <img src="/Mobile_prepaid/images/267d178586383a2541d409b8e8dd90a7.png" alt="Mobi Charge">
         </div>
-        <div class="menu-toggle">&#9776;</div>
+        <div class="menu-toggle">☰</div>
         <ul class="nav-links">
             <li><a href="homepage.html">Home</a></li>
-            <li><a href="plans.html" >Plans</a></li>
+            <li><a href="plans.html">Plans</a></li>
             <li><a href="recharge.html">Recharge</a></li>
             <li><a href="about.html">About Us</a></li>
-            <li class="icon"><a href="contact.html">Contact us </a></li>
-              <li class="nav-item dropdown">
-                  <a href="" id="authLink"class="active">Sign Up</a>
-                  <div class="dropdown-menu" id="userDropdown">
+            <li><a href="contact.html">Contact Us</a></li>
+            <li class="nav-item dropdown">
+                <a href="" id="authLink" class="active">Sign Up</a>
+                <div class="dropdown-menu" id="userDropdown">
                     <span id="userNumber"></span>
-                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
-                    <button id="logout" style="display: none;">logout</button>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';">Login</p>
+                    <button id="logoutSection" style="display: none;">Logout</button>
                 </div>
-              </li>
+            </li>
         </ul>
     </div>
+
     <div class="container">
         <div class="login-box">
             <h2>LOGIN</h2>
@@ -36,16 +76,18 @@
                 <p>ENTER MOBILE NUMBER:</p>
                 <div class="mobile-input">
                     <span class="country-code">+91</span>
-                    <input type="tel" id="mobileNumber" maxlength="10" class="otp-field" oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^([0-5])/g, '')">
+                    <input type="tel" id="mobileNumber" maxlength="10" class="otp-field" 
+                        oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/^([0-5])/g, '')">
                 </div>
                 <button class="user-btn" id="sendOtpButton">SEND OTP</button>
+                <div id="errorMessage" class="error-message"></div>
             </div>
         </div>
     </div>
 
     <div id="otpPopup" class="popup">
         <div class="popup-content">
-            <span class="close-btn" onclick="closeOtpPopup()">&times;</span>
+            <span class="close-btn" onclick="closeOtpPopup()">×</span>
             <div class="otp-box">
                 <h2>VERIFY OTP</h2>
                 <div class="input-area">
@@ -64,6 +106,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/Mobile_prepaid/user/Js/get_phone.js"></script>
     <script src="/Mobile_prepaid/user/Js/navbar.js"></script>
 </body>
