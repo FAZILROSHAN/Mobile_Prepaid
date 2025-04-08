@@ -1,13 +1,36 @@
 const { jsPDF } = window.jspdf;
 
+// DOM Elements
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('.content-section');
 const contentTitle = document.getElementById('content-title');
 const loadingOverlay = document.getElementById('loadingOverlay');
-const API_BASE_URL = 'http://localhost:8083/recharge-plans';
-const CATEGORY_API_BASE_URL = 'http://localhost:8083/categories';
 
-// Utility function to show success messages
+// API Configuration
+const API_BASE_URL = 'http://localhost:8083';
+const USERS_API_BASE_URL = `${API_BASE_URL}/users`;
+const CATEGORY_API_BASE_URL = `${API_BASE_URL}/categories`;
+const PAYMENTS_API_BASE_URL = `${API_BASE_URL}/payments`;
+const PLANS_API_BASE_URL = `${API_BASE_URL}/recharge-plans`;
+
+// Pagination Configuration
+const ITEMS_PER_PAGE = 10;
+let currentPage = {
+    users: 0,
+    categories: 0,
+    transactions: 0,
+    plans: 0
+};
+
+// Data Cache
+let allDataCache = {
+    users: [],
+    categories: [],
+    transactions: [],
+    plans: []
+};
+
+// Utility Functions
 function showSuccess(message) {
     const msg = document.getElementById('success-message');
     msg.textContent = message;
@@ -15,47 +38,273 @@ function showSuccess(message) {
     setTimeout(() => msg.style.display = 'none', 3000);
 }
 
-// Fetch and display all plans
-async function fetchPlans() {
+async function fetchData(url) {
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+        window.location.href = 'login.html';
+        return [];
+    }
+    
     try {
-        loadingOverlay.style.display = 'flex';
-        const response = await fetch(`${API_BASE_URL}`, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
             }
         });
-        if (!response.ok) throw new Error('Failed to fetch plans');
-        const plans = await response.json();
-        const tbody = document.querySelector('#plans-table tbody');
-        tbody.innerHTML = '';
-        plans.forEach(plan => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${plan.planId}</td>
-                <td>${plan.planName}</td>
-                <td>₹${plan.price.toFixed(2)}</td>
-                <td>${plan.validityDays}</td>
-                <td>${plan.data}</td>
-                <td>${plan.benefits}</td>
-                <td>${plan.category.categoryId}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editPlan(this, ${plan.planId})"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deletePlan(${plan.planId})"><i class="fas fa-trash"></i></button>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
+        
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        return await response.json();
     } catch (error) {
-        console.error('Error fetching plans:', error);
-        showSuccess('Error loading plans. Please try again.');
+        console.error('Fetch error:', error);
+        showSuccess(`Error loading data: ${error.message}`);
+        return [];
+    }
+}
+
+// Pagination Functions
+function renderPagination(sectionId, totalItems) {
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+    const container = document.getElementById(`${sectionId}-pagination`);
+    
+    if (!container) return;
+    
+    container.innerHTML = `
+        <nav>
+            <ul class="pagination">
+                <li class="page-item ${currentPage[sectionId] === 0 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage('${sectionId}', ${currentPage[sectionId] - 1})">Previous</a>
+                </li>
+                ${Array.from({ length: totalPages }, (_, i) => `
+                    <li class="page-item ${i === currentPage[sectionId] ? 'active' : ''}">
+                        <a class="page-link" href="#" onclick="changePage('${sectionId}', ${i})">${i + 1}</a>
+                    </li>
+                `).join('')}
+                <li class="page-item ${currentPage[sectionId] >= totalPages - 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" onclick="changePage('${sectionId}', ${currentPage[sectionId] + 1})">Next</a>
+                </li>
+            </ul>
+        </nav>
+    `;
+}
+
+function changePage(sectionId, newPage) {
+    currentPage[sectionId] = newPage;
+    renderPaginatedData(sectionId);
+}
+
+function renderPaginatedData(sectionId) {
+    const startIdx = currentPage[sectionId] * ITEMS_PER_PAGE;
+    const paginatedData = allDataCache[sectionId].slice(startIdx, startIdx + ITEMS_PER_PAGE);
+    const tbody = document.querySelector(`#${sectionId}-table tbody`);
+    
+    tbody.innerHTML = paginatedData.length === 0 
+        ? `<tr><td colspan="100%">No data found</td></tr>`
+        : paginatedData.map(item => createTableRow(sectionId, item)).join('');
+
+    renderPagination(sectionId, allDataCache[sectionId].length);
+}
+
+function createTableRow(sectionId, item) {
+    switch(sectionId) {
+        case 'users':
+            return `<tr>
+                <td>${item.username || 'N/A'}</td>
+                <td>${item.phoneNumber || 'N/A'}</td>
+                <td>${item.status || 'UNKNOWN'}</td>
+                <td>
+                    ${item.status === 'ACTIVE' 
+                        ? '<span class="badge bg-success">Approved</span>' 
+                        : `<button class="btn btn-sm btn-primary" onclick="approveKyc(${item.userId})">Approve</button>`}
+                </td>
+            </tr>`;
+            
+        case 'categories':
+            return `<tr>
+                <td>${item.categoryName || 'N/A'}</td>
+                <td>${item.active ? 'Active' : 'Inactive'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editCategory(this, ${item.categoryId})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-warning me-1" onclick="toggleCategoryActive(${item.categoryId}, ${item.active})">
+                        <i class="fas fa-toggle-${item.active ? 'off' : 'on'}"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${item.categoryId})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+            
+        case 'transactions':
+            const date = item.paymentDate ? new Date(item.paymentDate).toISOString().split('T')[0] : 'N/A';
+            return `<tr>
+                <td>${item.user?.phoneNumber || 'N/A'}</td>
+                <td>${date}</td>
+                <td>₹${item.amount?.toFixed(2) || '0.00'}</td>
+            </tr>`;
+            
+        case 'plans':
+            return `<tr>
+                <td>${item.planName || 'N/A'}</td>
+                <td>₹${item.price ? item.price.toFixed(2) : '0.00'}</td>
+                <td>${item.validityDays || 'N/A'}</td>
+                <td>${item.data || 'N/A'}</td>
+                <td>${item.benefits || 'N/A'}</td>
+                <td>${item.category?.categoryName || 'N/A'}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editPlan(this, ${item.planId})">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger" onclick="deletePlan(${item.planId})">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+            
+        default:
+            return '';
+    }
+}
+
+// Data Fetching Functions
+async function fetchUsers() {
+    try {
+        loadingOverlay.style.display = 'flex';
+        allDataCache.users = await fetchData(`${USERS_API_BASE_URL}/non-admin`);
+        renderPaginatedData('users');
+    } catch (error) {
+        showSuccess(`Error loading users: ${error.message}`);
     } finally {
         loadingOverlay.style.display = 'none';
     }
 }
 
-// Create a new plan
+async function fetchCategories() {
+    try {
+        loadingOverlay.style.display = 'flex';
+        allDataCache.categories = await fetchData(CATEGORY_API_BASE_URL);
+        renderPaginatedData('categories');
+        populateCategoryDropdown(allDataCache.categories.filter(c => c.active));
+    } catch (error) {
+        showSuccess(`Error loading categories: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+async function fetchTransactions() {
+    try {
+        loadingOverlay.style.display = 'flex';
+        allDataCache.transactions = await fetchData(PAYMENTS_API_BASE_URL);
+        renderPaginatedData('transactions');
+    } catch (error) {
+        showSuccess(`Error loading transactions: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+async function fetchPlans() {
+    try {
+        loadingOverlay.style.display = 'flex';
+        allDataCache.plans = await fetchData(PLANS_API_BASE_URL);
+        renderPaginatedData('plans');
+    } catch (error) {
+        showSuccess(`Error loading plans: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+// Category Functions
+function populateCategoryDropdown(categories) {
+    const select = document.getElementById('planCategory');
+    select.innerHTML = '<option value="">Select a category</option>';
+    categories.forEach(category => {
+        select.innerHTML += `<option value="${category.categoryId}">${category.categoryName}</option>`;
+    });
+}
+
+async function toggleCategoryActive(categoryId, isActive) {
+    if (!confirm(`Are you sure you want to ${isActive ? 'deactivate' : 'activate'} this category?`)) return;
+    
+    try {
+        loadingOverlay.style.display = 'flex';
+        const response = await fetch(`${CATEGORY_API_BASE_URL}/soft-delete/${categoryId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            },
+            body: JSON.stringify({ active: !isActive })
+        });
+        
+        if (!response.ok) throw new Error('Failed to update category');
+        showSuccess(`Category ${isActive ? 'deactivated' : 'activated'} successfully`);
+        await fetchCategories();
+    } catch (error) {
+        showSuccess(`Error: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+async function deleteCategory(categoryId) {
+    if (!confirm('Are you sure you want to permanently delete this category?')) return;
+    
+    try {
+        loadingOverlay.style.display = 'flex';
+        const response = await fetch(`${CATEGORY_API_BASE_URL}/hard-delete/${categoryId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to delete category');
+        showSuccess('Category deleted successfully');
+        await fetchCategories();
+    } catch (error) {
+        showSuccess(`Error: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
+
+function editCategory(btn, categoryId) {
+    const row = btn.closest('tr');
+    const cells = row.cells;
+    const currentName = cells[0].textContent;
+
+    cells[0].innerHTML = `<input type="text" value="${currentName}" class="form-control">`;
+    btn.innerHTML = '<i class="fas fa-save"></i>';
+
+    btn.onclick = async () => {
+        const newName = cells[0].querySelector('input').value;
+        try {
+            loadingOverlay.style.display = 'flex';
+            const response = await fetch(`${CATEGORY_API_BASE_URL}/${categoryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                },
+                body: JSON.stringify({ categoryName: newName })
+            });
+            
+            if (!response.ok) throw new Error('Failed to update category');
+            showSuccess('Category updated successfully');
+            await fetchCategories();
+        } catch (error) {
+            showSuccess(`Error: ${error.message}`);
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+}
+
+// Plan Functions
 async function createPlan() {
     const plan = {
         planName: document.getElementById('planName').value,
@@ -68,295 +317,125 @@ async function createPlan() {
 
     try {
         loadingOverlay.style.display = 'flex';
-        const token = localStorage.getItem('adminToken');
-        if (!token) throw new Error('No admin token found. Please log in.');
-        const response = await fetch(`${API_BASE_URL}`, {
+        const response = await fetch(PLANS_API_BASE_URL, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
             },
             body: JSON.stringify(plan)
         });
+        
         if (!response.ok) throw new Error('Failed to create plan');
-        const text = await response.text();
-        showSuccess(text || 'Plan created successfully');
-        fetchPlans();
+        showSuccess('Plan created successfully');
         document.querySelector('#createPlanModal form').reset();
         bootstrap.Modal.getInstance(document.getElementById('createPlanModal')).hide();
+        await fetchPlans();
     } catch (error) {
-        console.error('Error creating plan:', error);
-        showSuccess('Error creating plan. Please try again.');
+        showSuccess(`Error: ${error.message}`);
     } finally {
         loadingOverlay.style.display = 'none';
     }
 }
 
-// Update an existing plan
-async function updatePlan(planId, updatedPlan) {
+async function deletePlan(planId) {
+    if (!confirm('Are you sure you want to delete this plan?')) return;
+    
     try {
         loadingOverlay.style.display = 'flex';
-        const token = localStorage.getItem('adminToken');
-        if (!token) throw new Error('No admin token found. Please log in.');
-        const response = await fetch(`${API_BASE_URL}/${planId}`, {
-            method: 'PUT',
+        const response = await fetch(`${PLANS_API_BASE_URL}/${planId}`, {
+            method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(updatedPlan)
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
         });
-        if (!response.ok) throw new Error('Failed to update plan');
-        const text = await response.text();
-        showSuccess(text || 'Plan updated successfully');
-        fetchPlans();
+        
+        if (!response.ok) throw new Error('Failed to delete plan');
+        showSuccess('Plan deleted successfully');
+        await fetchPlans();
     } catch (error) {
-        console.error('Error updating plan:', error);
-        showSuccess('Error updating plan. Please try again.');
+        showSuccess(`Error: ${error.message}`);
     } finally {
         loadingOverlay.style.display = 'none';
     }
 }
 
-// Delete a plan
-async function deletePlan(planId) {
-    if (confirm('Are you sure you want to delete this plan?')) {
-        try {
-            loadingOverlay.style.display = 'flex';
-            const token = localStorage.getItem('adminToken');
-            if (!token) throw new Error('No admin token found. Please log in.');
-            const response = await fetch(`${API_BASE_URL}/${planId}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            });
-            if (!response.ok) throw new Error('Failed to delete plan');
-            const text = await response.text();
-            showSuccess(text || 'Plan deleted successfully');
-            fetchPlans();
-        } catch (error) {
-            console.error('Error deleting plan:', error);
-            showSuccess('Error deleting plan. Please try again.');
-        } finally {
-            loadingOverlay.style.display = 'none';
-        }
-    }
-}
-
-// Edit plan function
 function editPlan(btn, planId) {
     const row = btn.closest('tr');
     const cells = row.cells;
 
-    const currentId = cells[0].textContent;
-    const currentName = cells[1].textContent;
-    const currentPrice = parseFloat(cells[2].textContent.replace('₹', ''));
-    const currentValidity = parseInt(cells[3].textContent);
-    const currentData = cells[4].textContent;
-    const currentBenefits = cells[5].textContent;
-    const currentCategoryId = parseInt(cells[6].textContent);
+    const currentName = cells[0].textContent;
+    const currentPrice = parseFloat(cells[1].textContent.replace('₹', ''));
+    const currentValidity = parseInt(cells[2].textContent);
+    const currentData = cells[3].textContent;
+    const currentBenefits = cells[4].textContent;
+    const currentCategoryName = cells[5].textContent;
 
-    cells[1].innerHTML = `<input type="text" value="${currentName}" class="form-control">`;
-    cells[2].innerHTML = `<input type="number" value="${currentPrice}" class="form-control" min="0">`;
-    cells[3].innerHTML = `<input type="number" value="${currentValidity}" class="form-control" min="1">`;
-    cells[4].innerHTML = `<input type="text" value="${currentData}" class="form-control">`;
-    cells[5].innerHTML = `<input type="text" value="${currentBenefits}" class="form-control">`;
-    cells[6].innerHTML = `<input type="number" value="${currentCategoryId}" class="form-control" min="1">`;
+    cells[0].innerHTML = `<input type="text" value="${currentName}" class="form-control">`;
+    cells[1].innerHTML = `<input type="number" value="${currentPrice}" class="form-control" min="0">`;
+    cells[2].innerHTML = `<input type="number" value="${currentValidity}" class="form-control" min="1">`;
+    cells[3].innerHTML = `<input type="text" value="${currentData}" class="form-control">`;
+    cells[4].innerHTML = `<input type="text" value="${currentBenefits}" class="form-control">`;
+    cells[5].innerHTML = `<input type="text" value="${currentCategoryName}" class="form-control" disabled>`;
     btn.innerHTML = '<i class="fas fa-save"></i>';
 
     btn.onclick = async () => {
-        const newName = cells[1].querySelector('input').value;
-        const newPrice = parseFloat(cells[2].querySelector('input').value);
-        const newValidity = parseInt(cells[3].querySelector('input').value);
-        const newData = cells[4].querySelector('input').value;
-        const newBenefits = cells[5].querySelector('input').value;
-        const newCategoryId = parseInt(cells[6].querySelector('input').value);
-
         const updatedPlan = {
-            planId: currentId,
-            planName: newName,
-            price: newPrice,
-            validityDays: newValidity,
-            data: newData,
-            benefits: newBenefits,
-            category: { categoryId: newCategoryId }
+            planId: planId,
+            planName: cells[0].querySelector('input').value,
+            price: parseFloat(cells[1].querySelector('input').value),
+            validityDays: parseInt(cells[2].querySelector('input').value),
+            data: cells[3].querySelector('input').value,
+            benefits: cells[4].querySelector('input').value,
+            category: { categoryId: parseInt(document.querySelector(`#plans-table tr td:contains('${currentCategoryName}')`).previousElementSibling.textContent) }
         };
 
-        await updatePlan(planId, updatedPlan);
-        btn.innerHTML = '<i class="fas fa-edit"></i>';
-        btn.onclick = () => editPlan(btn, planId);
-    };
-}
-
-// Fetch and display all categories
-async function fetchCategories() {
-    try {
-        loadingOverlay.style.display = 'flex';
-        const response = await fetch(`${CATEGORY_API_BASE_URL}`, {
-            method: 'GET',
-            headers: { 
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
-            }
-        });
-        if (!response.ok) throw new Error('Failed to fetch categories');
-        const categories = await response.json();
-        const tbody = document.querySelector('#categories-table tbody');
-        tbody.innerHTML = '';
-        categories.forEach(category => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${category.categoryId}</td>
-                <td>${category.categoryName}</td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary me-1" onclick="editCategory(this, ${category.categoryId})"><i class="fas fa-edit"></i></button>
-                    <button class="btn btn-sm btn-outline-danger" onclick="deleteCategory(${category.categoryId})"><i class="fas fa-trash"></i></button>
-                </td>
-            `;
-            tbody.appendChild(row);
-        });
-        // Update the dropdown in Create Plan modal
-        populateCategoryDropdown(categories);
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-        showSuccess('Error loading categories. Please try again.');
-    } finally {
-        loadingOverlay.style.display = 'none';
-    }
-}
-
-// Populate category dropdown
-function populateCategoryDropdown(categories) {
-    const select = document.getElementById('planCategory');
-    select.innerHTML = '<option value="">Select a category</option>';
-    categories.forEach(category => {
-        select.innerHTML += `<option value="${category.categoryId}">${category.categoryName}</option>`;
-    });
-}
-
-// Create a new category
-async function createCategory() {
-    const category = {
-        categoryName: document.getElementById('categoryName').value
-    };
-    try {
-        loadingOverlay.style.display = 'flex';
-        const token = localStorage.getItem('adminToken');
-        if (!token) throw new Error('No admin token found. Please log in.');
-        const response = await fetch(`${CATEGORY_API_BASE_URL}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(category)
-        });
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Failed to create category');
-        }
-        const text = await response.text();
-        showSuccess(text || 'Category created successfully');
-        fetchCategories();
-        document.getElementById('categoryName').value = '';
-        bootstrap.Modal.getInstance(document.getElementById('createCategoryModal')).hide();
-    } catch (error) {
-        console.error('Error creating category:', error);
-        showSuccess(error.message || 'Error creating category. Please try again.');
-    } finally {
-        loadingOverlay.style.display = 'none';
-    }
-}
-
-// Update an existing category
-async function updateCategory(categoryId, updatedCategory) {
-    try {
-        loadingOverlay.style.display = 'flex';
-        const token = localStorage.getItem('adminToken');
-        if (!token) throw new Error('No admin token found. Please log in.');
-        const response = await fetch(`${CATEGORY_API_BASE_URL}/${categoryId}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            body: JSON.stringify(updatedCategory)
-        });
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(errorText || 'Failed to update category');
-        }
-        const text = await response.text();
-        showSuccess(text || 'Category updated successfully');
-        fetchCategories();
-    } catch (error) {
-        console.error('Error updating category:', error);
-        showSuccess(error.message || 'Error updating category. Please try again.');
-    } finally {
-        loadingOverlay.style.display = 'none';
-    }
-}
-
-// Delete a category
-async function deleteCategory(categoryId) {
-    if (confirm('Are you sure you want to delete this category? Related plans may be affected.')) {
         try {
             loadingOverlay.style.display = 'flex';
-            const token = localStorage.getItem('adminToken');
-            if (!token) throw new Error('No admin token found. Please log in.');
-            const response = await fetch(`${CATEGORY_API_BASE_URL}/${categoryId}`, {
-                method: 'DELETE',
+            const response = await fetch(`${PLANS_API_BASE_URL}/${planId}`, {
+                method: 'PUT',
                 headers: {
-                    'Authorization': `Bearer ${token}`
-                }
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+                },
+                body: JSON.stringify(updatedPlan)
             });
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(errorText || 'Failed to delete category');
-            }
-            const text = await response.text();
-            showSuccess(text || 'Category deleted successfully');
-            fetchCategories();
+            
+            if (!response.ok) throw new Error('Failed to update plan');
+            showSuccess('Plan updated successfully');
+            await fetchPlans();
         } catch (error) {
-            console.error('Error deleting category:', error);
-            showSuccess(error.message || 'Error deleting category. Please try again.');
+            showSuccess(`Error: ${error.message}`);
         } finally {
             loadingOverlay.style.display = 'none';
         }
-    }
-}
-
-// Edit category function
-function editCategory(btn, categoryId) {
-    const row = btn.closest('tr');
-    const cells = row.cells;
-
-    const currentName = cells[1].textContent;
-
-    cells[1].innerHTML = `<input type="text" value="${currentName}" class="form-control">`;
-    btn.innerHTML = '<i class="fas fa-save"></i>';
-
-    btn.onclick = async () => {
-        const newName = cells[1].querySelector('input').value;
-        const updatedCategory = { categoryName: newName };
-        await updateCategory(categoryId, updatedCategory);
-        btn.innerHTML = '<i class="fas fa-edit"></i>';
-        btn.onclick = () => editCategory(btn, categoryId);
     };
 }
 
-// Hook up the "Create Plan" modal
-document.getElementById('savePlanBtn').addEventListener('click', async () => {
-    await createPlan();
-});
+// User Functions
+async function approveKyc(userId) {
+    if (!confirm('Are you sure you want to approve this user?')) return;
+    
+    try {
+        loadingOverlay.style.display = 'flex';
+        const response = await fetch(`${USERS_API_BASE_URL}/${userId}/approve-kyc`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('adminToken')}`
+            }
+        });
+        
+        if (!response.ok) throw new Error('Failed to approve KYC');
+        showSuccess('User KYC approved successfully');
+        await fetchUsers();
+    } catch (error) {
+        showSuccess(`Error: ${error.message}`);
+    } finally {
+        loadingOverlay.style.display = 'none';
+    }
+}
 
-// Hook up the "Create Category" modal
-document.getElementById('saveCategoryBtn').addEventListener('click', async () => {
-    await createCategory();
-});
-
-// Switch sections
+// UI Functions
 function switchSection(sectionId) {
     navLinks.forEach(l => l.classList.remove('active'));
     document.querySelector(`[data-section="${sectionId}"]`).classList.add('active');
@@ -364,14 +443,18 @@ function switchSection(sectionId) {
     document.getElementById(sectionId).style.display = 'block';
     contentTitle.textContent = document.querySelector(`[data-section="${sectionId}"]`).textContent.trim() + ' Overview';
 
-    if (sectionId === 'plans') {
+    if (sectionId === 'users') {
+        fetchUsers();
+    } else if (sectionId === 'plans') {
         fetchPlans();
+    } else if (sectionId === 'transactions') {
+        fetchTransactions();
     } else if (sectionId === 'categories') {
         fetchCategories();
     }
 }
 
-// Navigation link event listeners
+// Event Listeners
 navLinks.forEach(link => {
     link.addEventListener('click', (e) => {
         e.preventDefault();
@@ -384,7 +467,6 @@ navLinks.forEach(link => {
     });
 });
 
-// Export report
 document.getElementById('export-btn').addEventListener('click', () => {
     const activeSection = document.querySelector('.content-section:not([style*="display: none"])');
     const table = activeSection.querySelector('table');
@@ -396,25 +478,30 @@ document.getElementById('export-btn').addEventListener('click', () => {
     doc.save(`${activeSection.id}_report.pdf`);
 });
 
-// Initial check for token and fetch categories
+document.getElementById('savePlanBtn').addEventListener('click', createPlan);
+document.getElementById('saveCategoryBtn').addEventListener('click', createCategory);
+
+// Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    const token = localStorage.getItem('adminToken');
-    if (!token) {
+    // Create pagination containers
+    ['users', 'categories', 'transactions', 'plans'].forEach(section => {
+        if (!document.getElementById(`${section}-pagination`)) {
+            const container = document.createElement('div');
+            container.id = `${section}-pagination`;
+            container.className = 'd-flex justify-content-center mt-3';
+            document.getElementById(section).appendChild(container);
+        }
+    });
+
+    // Check auth and load initial data
+    if (!localStorage.getItem('adminToken')) {
         window.location.href = 'login.html';
-    }
-    fetchCategories(); // Fetch categories to populate dropdown initially
-    if (document.querySelector('.nav-link.active').getAttribute('data-section') === 'plans') {
-        fetchPlans();
+    } else {
+        fetchCategories();
     }
 });
 
-// Logout handler
-document.getElementById('logout-btn').addEventListener('click', () => {
-    localStorage.removeItem('adminToken');
-    window.location.href = 'login.html';
-});
-
-// Charts
+// Charts (keep your existing chart code)
 const userGrowthCtx = document.getElementById('userGrowthChart').getContext('2d');
 new Chart(userGrowthCtx, {
     type: 'line',
