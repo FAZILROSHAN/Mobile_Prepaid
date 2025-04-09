@@ -1,3 +1,7 @@
+if (sessionStorage.getItem("loggedin") === "true") {
+    window.location.href = "user_dashboard.html";
+}
+
 const sendOtpButton = document.getElementById('sendOtpButton');
 const verifyOtpButton = document.getElementById('verifyOtpButton');
 const mobileNumberInput = document.getElementById('mobileNumber');
@@ -52,9 +56,10 @@ function verifyOtpAndLogin() {
         .then(response => {
             console.log("Login Response:", response.data);
 
-            localStorage.setItem('userPhone', phoneNumber);
-            localStorage.setItem('token', response.data.token);
-            localStorage.setItem('loggedin', 'true');
+            sessionStorage.setItem('userPhone', phoneNumber);
+            sessionStorage.setItem('token', response.data.token);
+            sessionStorage.setItem('loggedin', 'true');
+            sessionStorage.setItem('userName', response.data.username);
 
             showSuccess('Login successful!');
             setTimeout(() => window.location.href = 'user_dashboard.html', 1500);
@@ -110,7 +115,6 @@ function setupOtpInputListeners() {
     const otpInputs = document.querySelectorAll('.otp-input-fields input');
     
     otpInputs.forEach((input, index) => {
-        // Handle input and move to next field
         input.addEventListener('input', (e) => {
             const value = e.target.value;
             if (value.length === 1 && index < otpInputs.length - 1) {
@@ -121,14 +125,12 @@ function setupOtpInputListeners() {
             }
         });
 
-        // Handle Enter key
         input.addEventListener('keypress', (e) => {
             if (e.key === 'Enter') {
                 verifyOtpAndLogin();
             }
         });
 
-        // Handle pasting full OTP
         input.addEventListener('paste', (e) => {
             const pastedData = e.clipboardData.getData('text');
             if (pastedData.length === 6) {

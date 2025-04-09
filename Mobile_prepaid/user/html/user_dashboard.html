@@ -76,7 +76,6 @@
             height: calc(100vh - 70px);
             overflow-y: auto;
             transition: width 0.3s ease;
-            z-index: 1000;
             box-shadow: var(--shadow-md);
         }
         
@@ -513,26 +512,28 @@
 <body>
     <div class="navbar">
         <div class="logo">
-            <img src="/Mobile_prepaid/images/267d178586383a2541d409b8e8dd90a7.png" alt="Mobi charge">
+            <img src="/Mobile_prepaid/images/267d178586383a2541d409b8e8dd90a7.png" alt="Mobi Charge Logo">
         </div>
         <div class="menu-toggle">☰</div>
         <ul class="nav-links">
-            <li><a href="homepage.html" class="active">Home</a></li>
+            <li><a href="homepage.html">Home</a></li>
             <li><a href="plans.html">Plans</a></li>
             <li><a href="recharge.html">Recharge</a></li>
             <li><a href="about.html">About Us</a></li>
             <li class="icon"><a href="contact.html">Contact Us</a></li>
+    
             <li class="nav-item dropdown">
                 <a id="authLink" class="nav-link">Sign Up</a>
                 <div class="dropdown-menu" id="userDropdown">
-                    <span id="userNumber"></span>
-                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black;">Login</p>
+                    <span id="userName" style="font-weight: bold;"></span>
+                    <p id="logoutBtn" onclick="location.href='get_phone.html';" style="color: black; cursor: pointer;">Login</p>
                     <button id="profile" style="display: none;" onclick="window.location.href='user_dashboard.html'">Profile</button>
                     <button id="logout" style="display: none;">Logout</button>
                 </div>
             </li>
         </ul>
     </div>
+    
     <br><br>
     <div class="container">
         <div class="row">
